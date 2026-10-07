@@ -1,0 +1,731 @@
++ DATADIR=/net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid
++ METADIR=/highres/svenk/SEKEstorylines_snow/META
++ WORKDIR=/highres/svenk/SEKEstorylines_snow/WORK
++ RESDIR=/highres/svenk/SEKEstorylines_snow/RESULTS
++ FILE_BASE=ogd-climate-scenarios-ch2025-grid_ch
++ FILE_ORO=topo.swiss1_ch01r.swiss.lv95.nc
++ PERIOD=gwl3.0
++ cat /highres/svenk/SEKEstorylines_snow/META/model_list.txt
++ MODEL_LIST=$'clmcom-cclm4-cccma\nclmcom-cclm4-ecearth\nclmcom-cclm4-hadgem\nclmcom-cclm4-miroc\ncnrm-aladin-cnrm\ncnrm-aladin-hadgem\ncnrm-aladin-mpiesm\ncnrm-aladin-noresm\ndmi-hirham-ecearth\ndmi-hirham-hadgem\ngerics-remo-cnrm\nictp-regcm-hadgem\nipsl-wrf-ipsl\nmohc-hadrem-cnrm\nmohc-hadrem-ecearth\nmohc-hadrem-hadgem\nmohc-hadrem-mpiesm\nmohc-hadrem-noresm\nmpicsc-remo2-mpiesm\nsmhi-rca-ecearth\nsmhi-rca-hadgem\nsmhi-rca-ipsl\nsmhi-rca-mpiesm\nsmhi-rca-noresm'
++ cd /highres/svenk/SEKEstorylines_snow/WORK
++ echo 'Processing model: clmcom-cclm4-cccma'
+Processing model: clmcom-cclm4-cccma
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_clmcom-cclm4-cccma_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_clmcom-cclm4-cccma_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-cccma_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-cccma_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_clmcom-cclm4-cccma_gwl3.0.nc
++ echo 'Processing model: clmcom-cclm4-ecearth'
+Processing model: clmcom-cclm4-ecearth
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_clmcom-cclm4-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_clmcom-cclm4-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-ecearth_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-ecearth_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_clmcom-cclm4-ecearth_gwl3.0.nc
++ echo 'Processing model: clmcom-cclm4-hadgem'
+Processing model: clmcom-cclm4-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_clmcom-cclm4-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_clmcom-cclm4-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_clmcom-cclm4-hadgem_gwl3.0.nc
++ echo 'Processing model: clmcom-cclm4-miroc'
+Processing model: clmcom-cclm4-miroc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_clmcom-cclm4-miroc_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_clmcom-cclm4-miroc_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-miroc_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_clmcom-cclm4-miroc_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_clmcom-cclm4-miroc_gwl3.0.nc
++ echo 'Processing model: cnrm-aladin-cnrm'
+Processing model: cnrm-aladin-cnrm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_cnrm-aladin-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_cnrm-aladin-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-cnrm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-cnrm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_cnrm-aladin-cnrm_gwl3.0.nc
++ echo 'Processing model: cnrm-aladin-hadgem'
+Processing model: cnrm-aladin-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_cnrm-aladin-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_cnrm-aladin-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_cnrm-aladin-hadgem_gwl3.0.nc
++ echo 'Processing model: cnrm-aladin-mpiesm'
+Processing model: cnrm-aladin-mpiesm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_cnrm-aladin-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_cnrm-aladin-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-mpiesm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-mpiesm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_cnrm-aladin-mpiesm_gwl3.0.nc
++ echo 'Processing model: cnrm-aladin-noresm'
+Processing model: cnrm-aladin-noresm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_cnrm-aladin-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_cnrm-aladin-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-noresm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_cnrm-aladin-noresm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_cnrm-aladin-noresm_gwl3.0.nc
++ echo 'Processing model: dmi-hirham-ecearth'
+Processing model: dmi-hirham-ecearth
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_dmi-hirham-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_dmi-hirham-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_dmi-hirham-ecearth_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_dmi-hirham-ecearth_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_dmi-hirham-ecearth_gwl3.0.nc
++ echo 'Processing model: dmi-hirham-hadgem'
+Processing model: dmi-hirham-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_dmi-hirham-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_dmi-hirham-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_dmi-hirham-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_dmi-hirham-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_dmi-hirham-hadgem_gwl3.0.nc
++ echo 'Processing model: gerics-remo-cnrm'
+Processing model: gerics-remo-cnrm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_gerics-remo-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_gerics-remo-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_gerics-remo-cnrm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_gerics-remo-cnrm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_gerics-remo-cnrm_gwl3.0.nc
++ echo 'Processing model: ictp-regcm-hadgem'
+Processing model: ictp-regcm-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_ictp-regcm-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_ictp-regcm-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_ictp-regcm-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_ictp-regcm-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_ictp-regcm-hadgem_gwl3.0.nc
++ echo 'Processing model: ipsl-wrf-ipsl'
+Processing model: ipsl-wrf-ipsl
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_ipsl-wrf-ipsl_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_ipsl-wrf-ipsl_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_ipsl-wrf-ipsl_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_ipsl-wrf-ipsl_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_ipsl-wrf-ipsl_gwl3.0.nc
++ echo 'Processing model: mohc-hadrem-cnrm'
+Processing model: mohc-hadrem-cnrm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mohc-hadrem-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mohc-hadrem-cnrm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-cnrm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-cnrm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mohc-hadrem-cnrm_gwl3.0.nc
++ echo 'Processing model: mohc-hadrem-ecearth'
+Processing model: mohc-hadrem-ecearth
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mohc-hadrem-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mohc-hadrem-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-ecearth_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-ecearth_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mohc-hadrem-ecearth_gwl3.0.nc
++ echo 'Processing model: mohc-hadrem-hadgem'
+Processing model: mohc-hadrem-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mohc-hadrem-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mohc-hadrem-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mohc-hadrem-hadgem_gwl3.0.nc
++ echo 'Processing model: mohc-hadrem-mpiesm'
+Processing model: mohc-hadrem-mpiesm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mohc-hadrem-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mohc-hadrem-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-mpiesm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-mpiesm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mohc-hadrem-mpiesm_gwl3.0.nc
++ echo 'Processing model: mohc-hadrem-noresm'
+Processing model: mohc-hadrem-noresm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mohc-hadrem-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mohc-hadrem-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-noresm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mohc-hadrem-noresm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mohc-hadrem-noresm_gwl3.0.nc
++ echo 'Processing model: mpicsc-remo2-mpiesm'
+Processing model: mpicsc-remo2-mpiesm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_mpicsc-remo2-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_mpicsc-remo2-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_mpicsc-remo2-mpiesm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_mpicsc-remo2-mpiesm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_mpicsc-remo2-mpiesm_gwl3.0.nc
++ echo 'Processing model: smhi-rca-ecearth'
+Processing model: smhi-rca-ecearth
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_smhi-rca-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_smhi-rca-ecearth_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-ecearth_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-ecearth_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_smhi-rca-ecearth_gwl3.0.nc
++ echo 'Processing model: smhi-rca-hadgem'
+Processing model: smhi-rca-hadgem
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_smhi-rca-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_smhi-rca-hadgem_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-hadgem_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-hadgem_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_smhi-rca-hadgem_gwl3.0.nc
++ echo 'Processing model: smhi-rca-ipsl'
+Processing model: smhi-rca-ipsl
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_smhi-rca-ipsl_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_smhi-rca-ipsl_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-ipsl_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-ipsl_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_smhi-rca-ipsl_gwl3.0.nc
++ echo 'Processing model: smhi-rca-mpiesm'
+Processing model: smhi-rca-mpiesm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_smhi-rca-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_smhi-rca-mpiesm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-mpiesm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-mpiesm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_smhi-rca-mpiesm_gwl3.0.nc
++ echo 'Processing model: smhi-rca-noresm'
+Processing model: smhi-rca-noresm
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/tas/ogd-climate-scenarios-ch2025-grid_ch_tas_smhi-rca-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/tas.nc
++ cp /net/stratus/c2sm-data/CH2025/ogd-climate-scenarios-ch2025-grid/pr/ogd-climate-scenarios-ch2025-grid_ch_pr_smhi-rca-noresm_gwl3.0.nc /highres/svenk/SEKEstorylines_snow/WORK/pr.nc
++ cdo lec,2 tas.nc tas_masked.nc
++ rm -f tas.nc
++ cdo mul pr.nc tas_masked.nc snow.nc
++ rm -f pr.nc tas_masked.nc
++ cdo monmean snow.nc snow_monmean.nc
++ rm -f snow.nc
++ cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
++ rm -f snow_monmean.nc
++ cdo 'delete,timestep=1/4' snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
++ rm -f snow_monmean_selmon.nc
++ cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
++ rm -f snow_monmean_selmon_seltimestep.nc
++ cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
++ cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
++ cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc /highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
+cdo    mul: Filling up stream2 >/highres/svenk/SEKEstorylines_snow/META/topo.swiss1_ch01r.swiss.lv95_gec1000.nc< by copying the first timestep.
++ rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
++ cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+cdo    fldmean (Warning): Grid cell bounds not available, using constant grid cell area weights!
++ cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
++ 1> snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-noresm_gwl3.0.txt
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_smhi-rca-noresm_gwl3.0.nc
++ mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc /highres/svenk/SEKEstorylines_snow/RESULTS/result_field_smhi-rca-noresm_gwl3.0.nc
++ exit
