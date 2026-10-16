@@ -33,5 +33,25 @@ cdo shifttime,+2months snow_masked_monmean_selmon_seltimestep_seltimestep.nc sno
 ## 6 Annual mean
 cdo yearmean snow_masked_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_masked_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
 
+## R version
 
+`01_analysis_R.R` performs the same temperature mask, monthly means, Nov-Apr
+selection and edge-month trimming, winter-year mean, elevation mask, and
+spatial mean. It requires the `ncdf4` R package and uses the data and result
+directories configured at the top of the script. Run it with:
 
+```sh
+Rscript 01_analysis_R.R
+```
+
+For each model, it writes the area-mean time series to
+`RESULTS/result_<model>_gwl3.0.txt` and the annual masked grid fields to
+`RESULTS/result_field_<model>_gwl3.0.rds`.
+
+`02_plot_snowfall.R` reads `RESULTS/snowfall_sorted.txt` and saves a plot of
+all cases, with the five lowest-snowfall cases highlighted and identified by
+year and model, to `RESULTS/snowfall_sorted.png`. Run it with:
+
+```sh
+Rscript 02_plot_snowfall.R
+```

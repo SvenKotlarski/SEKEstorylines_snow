@@ -36,7 +36,8 @@ get_time_axis <- function(variable) {
 
 decode_time <- function(time_values, units, calendar) {
   if (is.null(calendar) || !calendar %in%
-      c("standard", "gregorian", "proleptic_gregorian")) {
+      c("standard", "gregorian", "proleptic_gregorian",
+        "365_day", "noleap", "360_day")) {
     stop(
       sprintf("Unsupported CF calendar: %s", calendar %||% "<missing>"),
       call. = FALSE
@@ -74,7 +75,37 @@ decode_time <- function(time_values, units, calendar) {
     hours = 3600,
     days = 86400
   )
-  as.Date(origin + time_values * seconds_per_unit, tz = "UTC")
+  if (calendar %in% c("standard", "gregorian", "proleptic_gregorian")) {
+    return(as.Date(origin + time_values * seconds_per_unit, tz = "UTC"))
+  }
+
+  # Fixed-length-year calendars: decode arithmetically. Only year and month
+  # are used downstream; 360_day days are capped at 28 to stay valid dates.
+  origin_parts <- as.integer(strsplit(format(origin, "%Y-%m-%d"), "-")[[1]])
+  origin_fraction <- (as.numeric(origin) %% 86400) / 86400
+  elapsed_days <- time_values * seconds_per_unit / 86400
+  if (calendar == "360_day") {
+    year_length <- 360
+    origin_day <- origin_parts[1] * year_length +
+      (origin_parts[2] - 1L) * 30 + origin_parts[3] - 1
+  } else {
+    year_length <- 365
+    cumulative <- c(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
+    origin_day <- origin_parts[1] * year_length +
+      cumulative[origin_parts[2]] + origin_parts[3] - 1
+  }
+  total_days <- floor(origin_day + origin_fraction + elapsed_days + 1e-9)
+  year <- total_days %/% year_length
+  day_of_year <- total_days %% year_length
+  if (calendar == "360_day") {
+    month <- day_of_year %/% 30 + 1
+    day <- pmin(day_of_year %% 30 + 1, 28)
+  } else {
+    month <- findInterval(day_of_year, cumulative)
+    day <- day_of_year - cumulative[month] + 1
+  }
+  as.Date(sprintf("%04d-%02d-%02d", as.integer(year), as.integer(month),
+                  as.integer(day)))
 }
 
 `%||%` <- function(x, y) {
@@ -144,6 +175,32 @@ read_topography <- function(path, spatial_names, spatial_lengths) {
   ])
   values <- aperm(values, permutation)
   as.vector(matrix(values, nrow = 1L))
+}
+
+get_result_paths <- function(model) {
+  result_base <- file.path(RESDIR, sprintf("result_%s_%s", model, PERIOD))
+  suffix_number <- 0L
+  repeat {
+    suffix <- if (suffix_number == 0L) {
+      ""
+    } else {
+      sprintf("_%d", suffix_number)
+    }
+    paths <- list(
+      nc = sprintf("%s%s_R.nc", result_base, suffix),
+      txt = sprintf("%s%s_R.txt", result_base, suffix),
+      field = file.path(RESDIR, sprintf(
+        "result_field_%s_%s%s_R.nc", model, PERIOD, suffix
+      )),
+      field_nonmasked = file.path(RESDIR, sprintf(
+        "result_field_%s_%s%s_nonmasked_R.nc", model, PERIOD, suffix
+      ))
+    )
+    if (!any(file.exists(unlist(paths)))) {
+      return(paths)
+    }
+    suffix_number <- suffix_number + 1L
+  }
 }
 
 process_model <- function(model, topo_path) {
@@ -221,13 +278,36 @@ process_model <- function(model, topo_path) {
   ))
   month_dates <- as.Date(paste0(names(month_groups), "-15"))
 
-  monthly_values <- matrix(
-    NA_real_,
-    nrow = length(month_groups),
-    ncol = number_of_cells
-  )
-  for (month_index in seq_along(month_groups)) {
-    steps <- month_groups[[month_index]]
+  # month_groups/month_dates are only used to classify each day's calendar
+  # month (for the Nov-Apr selection, winter-year assignment, and trimming
+  # of the incomplete leading/trailing winter below). No monthly mean or
+  # sum is ever computed; daily values are accumulated directly into
+  # winter-year bins, consistent with cdo's yearmean applied directly to
+  # daily values (01_analysis_cdo_v02.sh).
+  winter_months <- as.integer(format(month_dates, "%m")) %in%
+    c(11L, 12L, 1L, 2L, 3L, 4L)
+  selected <- which(winter_months)
+  if (length(selected) <= 6L) {
+    stop(sprintf("Not enough Nov-Apr data to trim for %s.", model),
+         call. = FALSE)
+  }
+  # Drop the first four and last two Nov-Apr months: they are always an
+  # incomplete leading/trailing winter season.
+  selected <- selected[seq.int(5L, length(selected) - 2L)]
+  selected_dates <- month_dates[selected]
+  month_numbers <- as.integer(format(selected_dates, "%m"))
+  winter_years <- as.integer(format(selected_dates, "%Y")) +
+    as.integer(month_numbers >= 11L)
+  output_years <- sort(unique(winter_years))
+  year_row <- match(winter_years, output_years)
+
+  # Day-weighted annual mean: accumulate daily sums and valid-day counts
+  # directly into the winter-year they belong to, then divide once per
+  # year (equivalent to cdo's yearmean on daily data).
+  annual_sums <- matrix(0, nrow = length(output_years), ncol = number_of_cells)
+  annual_counts <- matrix(0L, nrow = length(output_years), ncol = number_of_cells)
+  for (i in seq_along(selected)) {
+    steps <- month_groups[[selected[i]]]
     tas <- read_time_block(
       tas_nc, tas_name, tas_var, tas_time_index, min(steps), length(steps)
     )
@@ -236,53 +316,32 @@ process_model <- function(model, topo_path) {
     )
 
     snow <- pr
-    snow[is.na(tas) | tas > TEMPERATURE_THRESHOLD] <- NA_real_
-    snow[is.na(pr)] <- NA_real_
-    valid_counts <- colSums(!is.na(snow))
-    monthly_sum <- colSums(snow, na.rm = TRUE)
-    valid <- valid_counts > 0L
-    monthly_values[month_index, valid] <-
-      monthly_sum[valid] / valid_counts[valid]
+    snow[!is.na(tas) & tas > TEMPERATURE_THRESHOLD] <- 0
+    snow[is.na(tas) | is.na(pr)] <- NA_real_
+
+    row <- year_row[i]
+    annual_counts[row, ] <- annual_counts[row, ] + colSums(!is.na(snow))
+    annual_sums[row, ] <- annual_sums[row, ] + colSums(snow, na.rm = TRUE)
   }
 
-  winter_months <- as.integer(format(month_dates, "%m")) %in%
-    c(11L, 12L, 1L, 2L, 3L, 4L)
-  selected <- which(winter_months)
-  if (length(selected) <= 6L) {
-    stop(sprintf("Not enough Nov-Apr data to trim for %s.", model),
-         call. = FALSE)
-  }
-  selected <- selected[seq.int(5L, length(selected) - 2L)]
-  selected_dates <- month_dates[selected]
-  selected_values <- monthly_values[selected, , drop = FALSE]
-
-  month_numbers <- as.integer(format(selected_dates, "%m"))
-  winter_years <- as.integer(format(selected_dates, "%Y")) +
-    as.integer(month_numbers >= 11L)
-  output_years <- sort(unique(winter_years))
-  annual_values <- t(vapply(output_years, function(year) {
-    values <- colMeans(
-      selected_values[winter_years == year, , drop = FALSE],
-      na.rm = TRUE
-    )
-    values[!is.finite(values)] <- NA_real_
-    values
-  }, numeric(number_of_cells)))
+  annual_values <- matrix(
+    NA_real_, nrow = length(output_years), ncol = number_of_cells
+  )
+  valid <- annual_counts > 0L
+  annual_values[valid] <- annual_sums[valid] / annual_counts[valid]
 
   topo <- read_topography(topo_path, spatial_names, spatial_lengths)
   # The supplied *_gec1000.nc file contains 1 for included cells and missing
   # values elsewhere; it is not the original elevation field in metres.
+  annual_values_nonmasked <- annual_values
   annual_values[, !(is.finite(topo) & topo > 0)] <- NA_real_
   area_mean <- rowMeans(annual_values, na.rm = TRUE)
   area_mean[!is.finite(area_mean)] <- NA_real_
 
-  result_txt <- file.path(RESDIR, sprintf("result_%s_%s.txt", model, PERIOD))
-  result_field <- file.path(
-    RESDIR, sprintf("result_field_%s_%s.rds", model, PERIOD)
-  )
+  result_paths <- get_result_paths(model)
   write.table(
     data.frame(year = output_years, value = area_mean),
-    file = result_txt,
+    file = result_paths$txt,
     row.names = FALSE,
     col.names = TRUE,
     quote = FALSE
@@ -290,24 +349,64 @@ process_model <- function(model, topo_path) {
 
   dimension_values <- lapply(spatial_dims, function(dimension) dimension$vals)
   names(dimension_values) <- spatial_names
-  dimension_labels <- lapply(dimension_values, as.character)
-  field <- lapply(seq_along(output_years), function(index) {
-    array(annual_values[index, ], dim = spatial_lengths,
-          dimnames = setNames(dimension_labels, spatial_names))
-  })
-  names(field) <- as.character(output_years)
-  saveRDS(
-    list(
-      years = output_years,
-      field = field,
-      spatial_dimensions = dimension_values,
-      spatial_dimension_names = spatial_names,
-      units = ncatt_get(pr_nc, pr_name, "units")$value
-    ),
-    result_field
+  output_dimensions <- c(
+    list(ncdim_def("year", "year", as.double(output_years))),
+    lapply(seq_along(spatial_dims), function(index) {
+      ncdim_def(
+        spatial_names[[index]],
+        spatial_dims[[index]]$units %||% "1",
+        dimension_values[[index]]
+      )
+    })
   )
 
-  message(sprintf("Finished %s: wrote %s and %s", model, result_txt, result_field))
+  missing_value <- -9999
+  units <- ncatt_get(pr_nc, pr_name, "units")$value
+  write_nc <- function(path, values, dimensions, dim_lengths, longname) {
+    variable <- ncvar_def(
+      "snowfall_proxy", units, dimensions,
+      missval = missing_value, longname = longname
+    )
+    nc <- nc_create(path, variable)
+    on.exit(nc_close(nc), add = TRUE)
+    output_values <- array(
+      as.vector(t(values)),
+      dim = c(length(output_years), dim_lengths)
+    )
+    output_values[!is.finite(output_values)] <- missing_value
+    ncvar_put(nc, variable, output_values)
+  }
+
+  # Area mean as year x 1 x 1, like the CDO fldmean result
+  mean_dimensions <- c(
+    list(ncdim_def("year", "year", as.double(output_years))),
+    lapply(seq_along(spatial_dims), function(index) {
+      ncdim_def(
+        spatial_names[[index]],
+        spatial_dims[[index]]$units %||% "1",
+        mean(dimension_values[[index]])
+      )
+    })
+  )
+  write_nc(
+    result_paths$nc, matrix(area_mean, ncol = 1L), mean_dimensions,
+    rep(1L, length(spatial_dims)),
+    "Annual mean snowfall proxy above 1000 m, spatial mean"
+  )
+  write_nc(
+    result_paths$field, annual_values, output_dimensions, spatial_lengths,
+    "Annual mean snowfall proxy above 1000 m"
+  )
+  write_nc(
+    result_paths$field_nonmasked, annual_values_nonmasked,
+    output_dimensions, spatial_lengths,
+    "Annual mean snowfall proxy, all elevations"
+  )
+
+  message(sprintf(
+    "Finished %s: wrote %s",
+    model, paste(unlist(result_paths), collapse = ", ")
+  ))
 }
 
 model_file <- file.path(METADIR, "model_list.txt")

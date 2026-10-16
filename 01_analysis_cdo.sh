@@ -45,44 +45,38 @@ rm -f tas.nc
 cdo mul pr.nc tas_masked.nc snow.nc
 rm -f pr.nc tas_masked.nc
 
-## 4 Compute monthly means
-cdo monmean snow.nc snow_monmean.nc
+## 4 Select Nov-Apr
+cdo selmon,11,12,1,2,3,4 snow.nc snow_selmon.nc
 rm -f snow.nc
 
-## 5 Select Nov-Apr
-cdo selmon,11,12,1,2,3,4 snow_monmean.nc snow_monmean_selmon.nc
-rm -f snow_monmean.nc
+## 5 get rid of first four months (incomplete winter --> timesteps 1-120) and last two months (incomplete winter --> timesteps 5370-5430)
+cdo delete,timestep=1/120,5370/5430 snow_selmon.nc snow_selmon_seltimestep.nc
+rm -f snow_selmon.nc
 
-## 6 Get rid of first four months (incomplete winter)
-cdo delete,timestep=1/4 snow_monmean_selmon.nc snow_monmean_selmon_seltimestep.nc
-rm -f snow_monmean_selmon.nc
+## 6 Shift time by two months and compute annual mean
+cdo yearmean -shifttime,+2months snow_selmon_seltimestep.nc snow_selmon_seltimestep_yearmean.nc
+rm -f snow_selmon_seltimestep.nc
 
-## 7 Get rid of last two months (incomplete winter)
-cdo seltimestep,1/-3 snow_monmean_selmon_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep.nc
-rm -f snow_monmean_selmon_seltimestep.nc
+## 7 Mask out cells <1000 m
+## Note: use "ifthen" rather than "mul" here. With "mul", a cell with a
+## true (non-missing) value of exactly 0 multiplied by a missing mask
+## cell yields 0 instead of missing, so cells below 1000 m / outside CH
+## with zero winter snowfall would incorrectly leak into the result.
+## "ifthen" correctly propagates missingness from the mask regardless of
+## the data value.
+cdo ifthen ${METADIR}/${FILE_ORO%.nc}_gec1000.nc snow_selmon_seltimestep_yearmean.nc snow_selmon_seltimestep_yearmean_masked.nc
 
-## 8 Shift time by two months
-cdo shifttime,+2months snow_monmean_selmon_seltimestep_seltimestep.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
-rm -f snow_monmean_selmon_seltimestep_seltimestep.nc
-
-## 9 Annual mean
-cdo yearmean snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
-rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime.nc
-
-## 10 Mask out cells <1000 m
-cdo mul snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc ${METADIR}/${FILE_ORO%.nc}_gec1000.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc
-rm -f snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean.nc
-
-## 11 Compute spatial mean
-cdo fldmean snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc
+## 8 Compute spatial mean
+cdo fldmean snow_selmon_seltimestep_yearmean_masked.nc snow_selmon_seltimestep_yearmean_masked_fldmean.nc
 
 ## 12 Output to textfile
-cdo outputtab,year,value snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc > snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt
+cdo outputtab,year,value snow_selmon_seltimestep_yearmean_masked_fldmean.nc > snow_selmon_seltimestep_yearmean_masked_fldmean.txt
 
 ## 13 move relevant files to RESULT directory
-mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.txt  ${RESDIR}/result_${MODEL}_${PERIOD}.txt
-mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked_fldmean.nc  ${RESDIR}/result_${MODEL}_${PERIOD}.nc
-mv snow_monmean_selmon_seltimestep_seltimestep_shifttime_yearmean_masked.nc  ${RESDIR}/result_field_${MODEL}_${PERIOD}.nc
+mv snow_selmon_seltimestep_yearmean_masked_fldmean.txt  ${RESDIR}/result_${MODEL}_${PERIOD}.txt
+mv snow_selmon_seltimestep_yearmean_masked_fldmean.nc  ${RESDIR}/result_${MODEL}_${PERIOD}.nc
+mv snow_selmon_seltimestep_yearmean_masked.nc  ${RESDIR}/result_field_${MODEL}_${PERIOD}.nc
+mv snow_selmon_seltimestep_yearmean.nc  ${RESDIR}/result_field_${MODEL}_${PERIOD}_nonmasked.nc
 
 done
 

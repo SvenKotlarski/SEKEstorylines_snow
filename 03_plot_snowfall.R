@@ -4,7 +4,7 @@ results <- read.delim("../RESULTS/snowfall_sorted.txt")
 top5 <- head(results, 5)
 reds <- c("#67000D", "#A50F15", "#CB181D", "#EF3B2C", "#FB6A4A")
 
-png("../RESULTS/snowfall_sorted.png", width = 1800, height = 1400, res = 180)
+png("../PLOTS/snowfall_sorted.png", width = 1800, height = 1400, res = 180)
 layout(1:2, heights = c(4, 1.5))
 par(mar = c(4, 4.5, 3, 1))
 plot(
