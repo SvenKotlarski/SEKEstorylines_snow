@@ -95,3 +95,10 @@ Rscript 04_plot_field_shaded_multimodel.R [snowfall_sorted.txt] [out.png]
 By default it reads `RESULTS/snowfall_sorted.txt` and writes
 `PLOTS/snowfall_lowest5_unmasked.png`. It requires `ncdf4` and the topography
 file `META/topo.swiss1_ch01r.swiss.lv95.nc`.
+
+`04_plot_field_shaded_multimodel_3D.R` draws the same six winters as 3D
+perspective maps (base R `persp`, no extra packages): the unmasked snowfall
+field is draped over the terrain, with hillshade and 4x vertical exaggeration.
+It writes `PLOTS/snowfall_lowest5_unmasked_3D.png` by default. Camera angle,
+exaggeration and grid thinning are set by `VIEW_THETA`, `VIEW_PHI`,
+`VERTICAL_EXAG` and `GRID_STEP` at the top of the script.
