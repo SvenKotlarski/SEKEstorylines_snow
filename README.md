@@ -81,13 +81,17 @@ Rscript 03_plot_snowfall.R
 It reads `RESULTS/snowfall_sorted.txt` and writes
 `PLOTS/snowfall_sorted.png`, highlighting the five lowest-snowfall cases.
 
-`04_plot_field_shaded.R` plots the first time step of a nonmasked CDO field,
-with topographic shading. It uses a default field and output path, or accepts
-the input NetCDF and output PNG paths as arguments:
+`04_plot_field_shaded_multimodel.R` plots the five lowest-snowfall winters and
+the single highest-snowfall winter in `RESULTS/snowfall_sorted.txt`. Each
+panel uses the matching
+`result_field_<model>_gwl3.0_nonmasked.nc` timestep, so the map includes the
+full spatial distribution, including elevations below 1000 m. The plot uses
+topographic shading and a common snowfall colour scale:
 
 ```sh
-Rscript 04_plot_field_shaded.R [field.nc] [out.png]
+Rscript 04_plot_field_shaded_multimodel.R [snowfall_sorted.txt] [out.png]
 ```
 
-It requires `ncdf4` and the unmasked topography file
-`META/topo.swiss1_ch01r.swiss.lv95.nc`.
+By default it reads `RESULTS/snowfall_sorted.txt` and writes
+`PLOTS/snowfall_lowest5_unmasked.png`. It requires `ncdf4` and the topography
+file `META/topo.swiss1_ch01r.swiss.lv95.nc`.
